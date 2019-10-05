@@ -27,3 +27,12 @@ body {
   text-align: center;
   width: 34px;
 }
+
+.square:focus {
+  outline: none;
+}
+
+.square:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}

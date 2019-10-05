@@ -2,16 +2,20 @@ import React from 'react';
 import './App.css';
 
 const Square = props =>
-  <button className="square" onClick={props.onClick}>
+  <button className="square"
+    onClick={() => props.handleClick(props.rowNum, props.colNum, props)}>
     {props.value}
   </button>
 
 const Row = props =>
   <div className="matrix-row">
-    {props.value.map(item =>
+    {props.value.map( (item, index) =>
       <Square
+        key={"r"+props.rowNum+"c"+index}
         value={item}
-        //onClick={() => this.onClick(i)}
+        handleClick={props.handleClick}
+        rowNum={props.rowNum}
+        colNum={index}
       />
     )}
   </div>
@@ -31,12 +35,20 @@ class Matrix extends React.Component {
     };
   }
 
+  handleClick(rowNum, colNum, item) {
+    // const cols = this.state.arr.length();
+    // const rows = this.state.arr[0].length();
+    console.log(rowNum, colNum, this); //rows, cols)
+  }
+
   render = () =>
-    <div>
-      {this.state.arr.map(item =>
+    <div className="matrix">
+      {this.state.arr.map( (item, index) =>
         <Row
+          key={"row"+index}
           value={item}
-          //onClick={() => this.onClick(i)}
+          handleClick={this.handleClick}
+          rowNum={index}
         />
       )}
     </div>
@@ -45,11 +57,9 @@ class Matrix extends React.Component {
 const App = () =>
   <div className="App">
   the hourglass
-    <div className="matrix">
-      <Matrix
-            //onClick={i => this.handleClick(i)}
-      />
-    </div>
+    <Matrix
+          //onClick={i => this.handleClick(i)}
+    />
   </div>
 
 export default App;
