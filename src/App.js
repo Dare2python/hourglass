@@ -1,36 +1,44 @@
 import React from 'react';
 import './App.css';
 
-const Square = (props) =>
+const Square = props =>
   <button className="square" onClick={props.onClick}>
     {props.value}
   </button>
+
+const Row = props =>
+  <div className="matrix-row">
+    {props.value.map(item =>
+      <Square
+        value={item}
+        //onClick={() => this.onClick(i)}
+      />
+    )}
+  </div>
 
 class Matrix extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
+      arr: [
+        [1, 1, 1, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0],
+        [1, 1, 1, 0, 0, 0],
+        [0, 0, 2, 4, 4, 0],
+        [0, 0, 0, 2, 0, 0],
+        [0, 0, 1, 2, 4, 0]
       ]
     };
   }
 
-  renderSquare = (i) =>
-      <Square
-        value={this.state.squares[i]}
-        //onClick={() => this.onClick(i)}
-      />
-
   render = () =>
     <div>
-      <div className="matrix-row">
-        {this.renderSquare(0)}
-        {this.renderSquare(1)}
-        {this.renderSquare(2)}
-      </div>
+      {this.state.arr.map(item =>
+        <Row
+          value={item}
+          //onClick={() => this.onClick(i)}
+        />
+      )}
     </div>
 }
 
