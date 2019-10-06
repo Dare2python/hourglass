@@ -3,8 +3,9 @@ import './App.css';
 
 const Square = props =>
   <button className="square"
-    onClick={() => props.handleClick(props.rowNum, props.colNum, props)}>
-    {props.value}
+    style={{backgroundColor:props.value[1]===1?'LightCyan':'White'}}
+    onMouseEnter={() => props.handleHover(props.rowNum, props.colNum)}>
+    {props.value[0]}
   </button>
 
 const Row = props =>
@@ -13,53 +14,92 @@ const Row = props =>
       <Square
         key={"r"+props.rowNum+"c"+index}
         value={item}
-        handleClick={props.handleClick}
+        handleHover={props.handleHover}
         rowNum={props.rowNum}
         colNum={index}
       />
     )}
   </div>
 
+const INITIAL_ARR = [
+      [[1,0], [1,0], [1,0], [0,0], [0,0], [0,0]],
+      [[0,0], [1,0], [0,0], [0,0], [0,0], [0,0]],
+      [[1,0], [1,0], [1,0], [0,0], [0,0], [0,0]],
+      [[0,0], [0,0], [2,0], [4,0], [4,0], [0,0]],
+      [[0,0], [0,0], [0,0], [2,0], [0,0], [0,0]],
+      [[0,0], [0,0], [1,0], [2,0], [4,0], [0,0]]
+    ];
+
 class Matrix extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      arr: [
-        [1, 1, 1, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [1, 1, 1, 0, 0, 0],
-        [0, 0, 2, 4, 4, 0],
-        [0, 0, 0, 2, 0, 0],
-        [0, 0, 1, 2, 4, 0]
-      ]
+      arr: JSON.parse(JSON.stringify(INITIAL_ARR)),
+      hsum: 0
     };
   }
 
-  handleClick(rowNum, colNum, item) {
-    // const cols = this.state.arr.length();
-    // const rows = this.state.arr[0].length();
-    console.log(rowNum, colNum, this); //rows, cols)
-  }
+  handleHover = (rowNum, colNum) => 
+    this.setState( (state, props) => {
+      const a = JSON.parse(JSON.stringify(INITIAL_ARR));
+
+      let s = a[rowNum][colNum][0];
+      a[rowNum][colNum][1]=1;
+  
+      try {
+        s += a[rowNum][colNum+1][0];
+        a[rowNum][colNum+1][1]=1;
+      }catch(e){}
+
+      try {
+        s += a[rowNum][colNum+2][0];
+        a[rowNum][colNum+2][1]=1;
+      }catch(e){}
+
+      try {
+        s += a[rowNum+1][colNum+1][0];
+        a[rowNum+1][colNum+1][1]=1;
+      }catch(e){}
+
+      try {
+        s += a[rowNum+2][colNum][0];
+        a[rowNum+2][colNum][1]=1;
+      }catch(e){}
+
+      try {
+        s += a[rowNum+2][colNum+1][0];
+        a[rowNum+2][colNum+1][1]=1;
+      }catch(e){}
+
+      try {
+        s += a[rowNum+2][colNum+2][0];
+        a[rowNum+2][colNum+2][1]=1;
+      }catch(e){}
+
+      return {
+        arr: a,
+        hsum: s
+      };
+    });
 
   render = () =>
     <div className="matrix">
       {this.state.arr.map( (item, index) =>
         <Row
-          key={"row"+index}
+          key={"r"+index}
           value={item}
-          handleClick={this.handleClick}
+          handleHover={(rowNum, colNum)=>this.handleHover(rowNum, colNum)}
           rowNum={index}
         />
       )}
+      <h4>Hourglass Sum={this.state.hsum}</h4>
     </div>
 }
 
 const App = () =>
   <div className="App">
-  the hourglass
-    <Matrix
-          //onClick={i => this.handleClick(i)}
-    />
+    <h1>the hourglass</h1>
+    <Matrix/>
   </div>
 
 export default App;
